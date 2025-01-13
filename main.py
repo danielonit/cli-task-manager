@@ -57,6 +57,17 @@ def delete(id: str):
         json.dump(data, file, indent=4)
         print(f"Task deleted: {id}")
 
+@app.command("delete-all")
+def delete_all():
+    ensure_data_file()
+    with open("data.json", "r") as file:
+        data = json.load(file)
+        data["tasks"] = {}
+
+    with open("data.json", "w") as file:
+        json.dump(data, file, indent=4)
+        print("All tasks deleted")
+
 @app.command("mark-to-do")
 def mark_to_do(id: str):
     ensure_data_file()
