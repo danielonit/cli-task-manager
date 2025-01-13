@@ -15,14 +15,18 @@ def create_time():
     local_time = time.localtime()
     return str(time.strftime("%B %d, %Y %I:%M:%S", local_time))
 
-def read_file():
-    with open("data.json", "r") as file:
+def read_file(file_name):
+    with open(file_name, "r") as file:
         return json.load(file)
+    
+def write_file(file_name, data):
+    with open(file_name, "w") as file:
+        json.dump(data, file, indent=4)
 
 @app.command()
 def add(task: str):
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     task_id = data["next_id"]
@@ -31,90 +35,83 @@ def add(task: str):
 
     data["next_id"] += 1
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task added successfully (ID: {task_id})")
+    write_file("data.json", data)
+    print(f"Task added successfully (ID: {task_id})")
 
 @app.command()
 def update(id: str, task: str):    
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     tasks[id]["description"] = task
 
     tasks[id]["updated_at"] = create_time()
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task updated: {task}")
+    write_file("data.json", data)
+    print(f"Task updated: {task}")
 
 @app.command()
 def delete(id: str):
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     del tasks[id]
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task deleted: {id}")
+    write_file("data.json", data)
+    print(f"Task deleted: {id}")
 
 @app.command("delete-all")
 def delete_all():
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     data["tasks"] = {}
     data["next_id"] = 1
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print("All tasks deleted")
+    write_file("data.json", data)
+    print("All tasks deleted")
 
 @app.command("mark-to-do")
 def mark_to_do(id: str):
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "to-do"
     task = tasks[id]["description"]
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task marked to do: {task}")
+    write_file("data.json", data)
+    print(f"Task marked to do: {task}")
 
 @app.command("mark-in-progress")
 def mark_in_progress(id: str):
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "in-progress"
     task = tasks[id]["description"]
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task marked in progress: {task}")
+    write_file("data.json", data)
+    print(f"Task marked in progress: {task}")
 
 @app.command("mark-done")
 def mark_done(id: str):
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "done"
     task = tasks[id]["description"]
 
-    with open("data.json", "w") as file:
-        json.dump(data, file, indent=4)
-        print(f"Task marked done: {task}")
+    write_file("data.json", data)
+    print(f"Task marked done: {task}")
 
 @app.command()
 def list():
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
@@ -123,7 +120,7 @@ def list():
 @app.command("list-to-do")
 def list_to_do():
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
@@ -133,7 +130,7 @@ def list_to_do():
 @app.command("list-in-progress")
 def list_in_progress():
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
@@ -143,7 +140,7 @@ def list_in_progress():
 @app.command("list-done")
 def list_done():
     ensure_data_file()
-    data = read_file()
+    data = read_file("data.json")
     tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
