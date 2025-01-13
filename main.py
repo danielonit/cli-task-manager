@@ -15,14 +15,17 @@ def create_time():
     local_time = time.localtime()
     return str(time.strftime("%B %d, %Y %I:%M:%S", local_time))
 
+def read_file():
+    with open("data.json", "r") as file:
+        return json.load(file)
+
 @app.command()
 def add(task: str):
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
-        task_id = data["next_id"]
+    task_id = data["next_id"]
 
     tasks[task_id] = {"id": task_id, "description": task, "status": "pending", "created_at": create_time(), "updated_at": "not updated"}
 
@@ -35,9 +38,8 @@ def add(task: str):
 @app.command()
 def update(id: str, task: str):    
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     tasks[id]["description"] = task
 
@@ -50,9 +52,8 @@ def update(id: str, task: str):
 @app.command()
 def delete(id: str):
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     del tasks[id]
 
@@ -63,10 +64,9 @@ def delete(id: str):
 @app.command("delete-all")
 def delete_all():
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        data["tasks"] = {}
-        data["next_id"] = 1
+    data = read_file()
+    data["tasks"] = {}
+    data["next_id"] = 1
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
@@ -75,9 +75,8 @@ def delete_all():
 @app.command("mark-to-do")
 def mark_to_do(id: str):
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "to-do"
     task = tasks[id]["description"]
@@ -89,9 +88,8 @@ def mark_to_do(id: str):
 @app.command("mark-in-progress")
 def mark_in_progress(id: str):
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "in-progress"
     task = tasks[id]["description"]
@@ -103,12 +101,11 @@ def mark_in_progress(id: str):
 @app.command("mark-done")
 def mark_done(id: str):
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
-        tasks[id]["status"] = "done"
-        task = tasks[id]["description"]
+    tasks[id]["status"] = "done"
+    task = tasks[id]["description"]
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
@@ -117,9 +114,8 @@ def mark_done(id: str):
 @app.command()
 def list():
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
         print(f"- {task_id}: {task['description']} ({task['status']})")
@@ -127,9 +123,8 @@ def list():
 @app.command("list-to-do")
 def list_to_do():
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
         if task["status"] == "to-do":
@@ -138,9 +133,8 @@ def list_to_do():
 @app.command("list-in-progress")
 def list_in_progress():
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
         if task["status"] == "in-progress":
@@ -149,9 +143,8 @@ def list_in_progress():
 @app.command("list-done")
 def list_done():
     ensure_data_file()
-    with open("data.json", "r") as file:
-        data = json.load(file)
-        tasks = data.get("tasks", {})
+    data = read_file()
+    tasks = data.get("tasks", {})
 
     for task_id, task in tasks.items():
         if task["status"] == "done":
