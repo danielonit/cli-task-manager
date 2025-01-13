@@ -157,6 +157,20 @@ def list_done():
         if task["status"] == "done":
             print(f"- {task_id}: {task['description']} ({task['status']})")
 
+@app.command()
+def help():
+    print("- add: Add a new task")
+    print("- update: Update a task")
+    print("- delete: Delete a task")
+    print("- delete-all: Delete all tasks")
+    print("- mark-to-do: Mark a task as to do")
+    print("- mark-in-progress: Mark a task as in progress")
+    print("- mark-done: Mark a task as done")
+    print("- list: List all tasks")
+    print("- list-to-do: List all tasks marked as to do")
+    print("- list-in-progress: List all tasks marked as in progress")
+    print("- list-done: List all tasks marked as done")
+
 
 if __name__ == "__main__":
     app()
