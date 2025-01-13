@@ -9,6 +9,7 @@ def ensure_data_file():
     if not os.path.exists("data.json"):
         with open("data.json", "w") as file:
             json.dump({"tasks": {}}, file)
+            json.dump({"next_id": 1}, file)
 
 def create_time():
     local_time = time.localtime()
@@ -20,10 +21,12 @@ def add(task: str):
     with open("data.json", "r") as file:
         data = json.load(file)
         tasks = data.get("tasks", {})
-        
-    task_id = len(tasks) + 1
+
+        task_id = data["next_id"]
 
     tasks[task_id] = {"id": task_id, "description": task, "status": "pending", "created_at": create_time(), "updated_at": "not updated"}
+
+    data["next_id"] += 1
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
@@ -63,6 +66,7 @@ def delete_all():
     with open("data.json", "r") as file:
         data = json.load(file)
         data["tasks"] = {}
+        data["next_id"] = 1
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
