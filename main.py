@@ -65,10 +65,11 @@ def mark_to_do(id: str):
         tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "to-do"
+    task = tasks[id]["description"]
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
-        print(f"Task marked to do: {id}")
+        print(f"Task marked to do: {task}")
 
 @app.command("mark-in-progress")
 def mark_in_progress(id: str):
@@ -78,10 +79,11 @@ def mark_in_progress(id: str):
         tasks = data.get("tasks", {})
 
     tasks[id]["status"] = "in-progress"
+    task = tasks[id]["description"]
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
-        print(f"Task marked in progress: {id}")
+        print(f"Task marked in progress: {task}")
 
 @app.command("mark-done")
 def mark_done(id: str):
@@ -91,10 +93,11 @@ def mark_done(id: str):
         tasks = data.get("tasks", {})
 
         tasks[id]["status"] = "done"
+        task = tasks[id]["description"]
 
     with open("data.json", "w") as file:
         json.dump(data, file, indent=4)
-        print(f"Task marked done: {id}")
+        print(f"Task marked done: {task}")
 
 @app.command()
 def list():
