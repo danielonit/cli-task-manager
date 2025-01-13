@@ -5,24 +5,29 @@ import os
 
 app = typer.Typer()
 
+# creates json file if it doesn't exist
 def ensure_data_file():
     if not os.path.exists("data.json"):
         with open("data.json", "w") as file:
             json.dump({"tasks": {}}, file)
             json.dump({"next_id": 1}, file)
 
+# creates a time stamp
 def create_time():
     local_time = time.localtime()
     return str(time.strftime("%B %d, %Y %I:%M:%S", local_time))
 
+# reads a json file
 def read_file(file_name):
     with open(file_name, "r") as file:
         return json.load(file)
     
+# writes to a json file
 def write_file(file_name, data):
     with open(file_name, "w") as file:
         json.dump(data, file, indent=4)
 
+# creates a new task and adds it to the json file
 @app.command()
 def add(task: str):
     ensure_data_file()
@@ -38,6 +43,7 @@ def add(task: str):
     write_file("data.json", data)
     print(f"Task added successfully (ID: {task_id})")
 
+# updates a task in the json file
 @app.command()
 def update(id: str, task: str):    
     ensure_data_file()
@@ -51,6 +57,7 @@ def update(id: str, task: str):
     write_file("data.json", data)
     print(f"Task updated: {task}")
 
+# deletes a task from the json file
 @app.command()
 def delete(id: str):
     ensure_data_file()
@@ -62,6 +69,7 @@ def delete(id: str):
     write_file("data.json", data)
     print(f"Task deleted: {id}")
 
+# deletes all tasks from the json file
 @app.command("delete-all")
 def delete_all():
     ensure_data_file()
@@ -72,6 +80,7 @@ def delete_all():
     write_file("data.json", data)
     print("All tasks deleted")
 
+# marks a task as to-do
 @app.command("mark-to-do")
 def mark_to_do(id: str):
     ensure_data_file()
@@ -84,6 +93,7 @@ def mark_to_do(id: str):
     write_file("data.json", data)
     print(f"Task marked to do: {task}")
 
+# marks a task as in-progress
 @app.command("mark-in-progress")
 def mark_in_progress(id: str):
     ensure_data_file()
@@ -96,6 +106,7 @@ def mark_in_progress(id: str):
     write_file("data.json", data)
     print(f"Task marked in progress: {task}")
 
+# marks a task as done
 @app.command("mark-done")
 def mark_done(id: str):
     ensure_data_file()
@@ -108,6 +119,7 @@ def mark_done(id: str):
     write_file("data.json", data)
     print(f"Task marked done: {task}")
 
+# lists all tasks
 @app.command()
 def list():
     ensure_data_file()
@@ -117,6 +129,7 @@ def list():
     for task_id, task in tasks.items():
         print(f"- {task_id}: {task['description']} ({task['status']})")
 
+# lists all tasks marked as to-do
 @app.command("list-to-do")
 def list_to_do():
     ensure_data_file()
@@ -127,6 +140,7 @@ def list_to_do():
         if task["status"] == "to-do":
             print(f"- {task_id}: {task['description']} ({task['status']})")
 
+# lists all tasks marked as in-progress
 @app.command("list-in-progress")
 def list_in_progress():
     ensure_data_file()
@@ -137,6 +151,7 @@ def list_in_progress():
         if task["status"] == "in-progress":
             print(f"- {task_id}: {task['description']} ({task['status']})")
 
+# lists all tasks marked as done
 @app.command("list-done")
 def list_done():
     ensure_data_file()
@@ -147,6 +162,7 @@ def list_done():
         if task["status"] == "done":
             print(f"- {task_id}: {task['description']} ({task['status']})")
 
+# shows all available commands
 @app.command()
 def help():
     print("- add: Add a new task")
