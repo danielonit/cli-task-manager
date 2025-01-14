@@ -129,6 +129,16 @@ def list():
     for task_id, task in tasks.items():
         print(f"- {task_id}: {task['description']} ({task['status']})")
 
+@app.command("list-pending")
+def list_pending():
+    ensure_data_file()
+    data = read_file("data.json")
+    tasks = data.get("tasks", {})
+
+    for task_id, task in tasks.items():
+        if task["status"] == "pending":
+            print(f"- {task_id}: {task['description']} ({task['status']})")
+
 # lists all tasks marked as to-do
 @app.command("list-to-do")
 def list_to_do():
@@ -173,6 +183,7 @@ def help():
     print("- mark-in-progress: Mark a task as in progress")
     print("- mark-done: Mark a task as done")
     print("- list: List all tasks")
+    print("- list-pending: List all tasks marked as pending")
     print("- list-to-do: List all tasks marked as to do")
     print("- list-in-progress: List all tasks marked as in progress")
     print("- list-done: List all tasks marked as done")
