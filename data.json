@@ -1,26 +1,4 @@
 {
-    "tasks": {
-        "1": {
-            "id": 1,
-            "description": "walk the dog",
-            "status": "pending",
-            "created_at": "January 13, 2025 01:30:31",
-            "updated_at": "not updated"
-        },
-        "2": {
-            "id": 2,
-            "description": "call the doctor",
-            "status": "pending",
-            "created_at": "January 13, 2025 01:30:37",
-            "updated_at": "not updated"
-        },
-        "3": {
-            "id": 3,
-            "description": "see the dentist",
-            "status": "pending",
-            "created_at": "January 13, 2025 01:30:46",
-            "updated_at": "not updated"
-        }
-    },
-    "next_id": 4
+    "tasks": {},
+    "next_id": 1
 }
